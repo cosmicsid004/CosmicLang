@@ -10,7 +10,7 @@ pub enum Token {
     Minus,              // -
     Star,               // * 
     Slash,              // /
-    Equal,             // =
+    Equal,              // =
     LParen,             // (
     RParen,             // )
     Ident(String),      // variable(identifier): x, y
