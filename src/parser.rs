@@ -78,7 +78,21 @@ impl Parser {
         // check if it's a publish command
         if let Token::Publish = self.current() {
             self.advance(); // consume the keyword
-            let expr = self.parse_expr()?; // nested parsing
+
+            // opening parenthesis expected
+            match self.advance() {
+                Token::LParen => {},
+                other => {return Err(format!("Expected '(' after publish, got {:?}", other));}
+            }
+
+            let expr = self.parse_expr()?;
+
+            // closing parenthesis expected
+            match self.advance() {
+                Token::RParen => {},
+                other => return Err(format!("Expected ')' after publish statement, got {:?}", other))
+            }
+
             return Ok(Expr::Publish(Box::new(expr))); // return when all nessted parsing is done
         }
 
