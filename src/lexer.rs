@@ -16,6 +16,7 @@ pub enum Token {
     LParen,             // (
     RParen,             // )
     Ident(String),      // variable(identifier): x, y
+    Publish,            // use this to get standard output
     EOF                 // End Of Input: to know when the line ends
 }
 
@@ -87,7 +88,10 @@ impl Lexer {
             }
         }
 
-        Token::Ident(ident)
+        match ident.as_str() {
+            "publish" => Token::Publish,
+            _ => Token::Ident(ident)  
+        }
     }
 
     // This would be the MAIN METHOD which will tokenize the source code

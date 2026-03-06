@@ -18,7 +18,8 @@ pub enum Expr {
     Number(f64),
     Variable(String),
     Assign(String, Box<Expr>),
-    BinOp(Box<Expr>, Op, Box<Expr>)
+    BinOp(Box<Expr>, Op, Box<Expr>),
+    Publish(Box<Expr>)
 }
 
 // Math operstors
@@ -73,6 +74,14 @@ impl Parser {
 
     // handling assignment i:e x = expr
     fn parse_assignment(&mut self) -> Result<Expr, String> {
+
+        // check if it's a publish command
+        if let Token::Publish = self.current() {
+            self.advance(); // consume the keyword
+            let expr = self.parse_expr()?; // nested parsing
+            return Ok(Expr::Publish(Box::new(expr))); // return when all nessted parsing is done
+        }
+
         // checking it it's in the form "ident ="
         if let Token::Ident(name) = self.current().clone() {
             if self.pos + 1 < self.tokens.len() { // check if there is next token available

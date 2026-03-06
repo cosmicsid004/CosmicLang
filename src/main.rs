@@ -84,10 +84,10 @@ fn main() {
         // Step 3: Evaluate
         match evaluator.eval(ast) {
             Ok(res) => {
-                println!("{}", res)
+                // println!("{}", res)
             }
             Err(e) => {
-                println!("Error in evaluating {}", e);
+                println!("Error: {}", e);
             }
         }
     }

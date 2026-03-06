@@ -41,7 +41,7 @@ impl Evaluator {
             Expr::Assign(name, value_expr) => {
                 let val = self.eval(*value_expr)?; // recurursively solving the nested statements. Derefrencing because eval takes Expr not Box<Expr>
                 self.env.insert(name.clone(), val);
-                println!("{} = {}", name, val); // display what was stored
+                // println!("{} = {}", name, val); // display what was stored
                 Ok(val)
             }
 
@@ -62,6 +62,13 @@ impl Evaluator {
                         }
                     }
                 }
+            }
+
+            // A publish keyword
+            Expr::Publish(inner) => {
+                let val = self.eval(*inner)?; // evaluting the nested statements
+                println!("{}", val);
+                Ok(val)
             }
         }
     }
