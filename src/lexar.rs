@@ -1,3 +1,5 @@
+// Step 1
+
 // So, this will used to make the convert the raw text into list of Tokens.
 // For instance "x = 10 + 6" -> [Ident(x), Equal, Number(10), Plus, Number(6)]
 
