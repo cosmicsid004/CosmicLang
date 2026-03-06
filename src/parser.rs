@@ -7,7 +7,7 @@
 //                        insted it should be 2 + (4 * 3) = 14
 // So, we will make a tree and calculate t=it bottom up
 
-use crate::lexar::Token;
+use crate::lexer::Token;
 
 // So, the tree can have any the following types of node
 // this is recursive enum, that's why this is using a Box<Expr>
