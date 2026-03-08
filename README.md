@@ -19,13 +19,13 @@ cosmic >> (x + 2) * 3
 ```
 
 ### Current Version (v1.0)
-- -- Math expressions with correct operator precedence (2 + 3 * 4 = 14, not 18)
-- --Variable assignment and reuse
-- --Negative numbers and nested parens
-- --'publish(expr)' to print output
-- --'vars' to see all stored variables
-- --'clear' to clear the screen
-- --'quit' / 'exit' to leave
+- Math expressions with correct operator precedence (2 + 3 * 4 = 14, not 18)
+- Variable assignment and reuse
+- Negative numbers and nested parens
+- 'publish(expr)' to print output
+- 'vars' to see all stored variables
+- 'clear' to clear the screen
+- 'quit' / 'exit' to leave
 ## How it's built
 
 The compiler pipeline has 3 stages:
