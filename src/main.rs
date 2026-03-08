@@ -2,14 +2,16 @@
 // This is the part user interact with.
 
 // Module imports
-mod evaluator;
-mod lexer;
-mod parser;
+mod evaluator_folder;
+mod lexer_folder;
+mod parser_folder;
+mod stmt;
+mod value; 
 
 // things we would be using from each module
-use evaluator::Evaluator;
-use lexer::Lexer;
-use parser::Parser;
+use evaluator_folder::evaluator::Evaluator;
+use lexer_folder::lexer::Lexer;
+use parser_folder::parser::Parser;
 use std::io::{self, Write}; // to read inputs anf flushing stdout
 
 fn main() {
@@ -82,8 +84,8 @@ fn main() {
         };
 
         // Step 3: Evaluate
-        match evaluator.eval(ast) {
-            Ok(res) => {
+        match evaluator.eval_stmt(ast) {
+            Ok(_res) => { // _res telling its unused on purpose
                 // println!("{}", res)
             }
             Err(e) => {

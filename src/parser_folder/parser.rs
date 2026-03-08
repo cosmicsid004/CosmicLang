@@ -2,12 +2,13 @@
 
 // So, now lets move on to the Parser CosmicLang
 // This converts the list of Tokens to an AST(Abstract Syntax Tree)
+// This is a classic Recursive Decent Parser
 // We do this to capture the MEANING and PRECEDENCE of the expression.
 // For instance 2 + 4 * 3 should NOT be (2 + 4) * 3 = 18
 //                        insted it should be 2 + (4 * 3) = 14
-// So, we will make a tree and calculate t=it bottom up
-
-use crate::lexer::Token;
+// So, we will make a tree and calculate it bottom up
+use crate::lexer_folder::lexer::Token; // this means we are refreing a file in root file
+use crate::stmt::Stmt;
 
 // So, the tree can have any the following types of node
 // this is recursive enum, that's why this is using a Box<Expr>
@@ -19,7 +20,7 @@ pub enum Expr {
     Variable(String),
     Assign(String, Box<Expr>),
     BinOp(Box<Expr>, Op, Box<Expr>),
-    Publish(Box<Expr>)
+    // Publish(Box<Expr>)
 }
 
 // Math operstors
@@ -27,13 +28,13 @@ pub enum Expr {
 pub enum Op {
     Add,
     Sub,
-    Mul, 
-    Div
+    Mul,
+    Div,
 }
 
 pub struct Parser {
     tokens: Vec<Token>,
-    pos: usize 
+    pos: usize,
 }
 
 impl Parser {
@@ -45,11 +46,11 @@ impl Parser {
     // looking at current token without consuming.
     // just looking to decide what ro do next
     fn current(&self) -> &Token {
-        &self.tokens[self.pos]
+        &self.tokens.get(self.pos).unwrap_or(&Token::EOF)
     }
 
     // we are returning the current token and moving forward/consuming
-    fn advance(&mut self) -> Token {
+    pub fn advance(&mut self) -> Token {
         let tok = self.tokens[self.pos].clone();
         self.pos += 1;
         tok
@@ -65,41 +66,30 @@ impl Parser {
 
     // Lower in the list = higher precedence.
 
-    
-    // Start parsing 
-    pub fn parse(&mut self) -> Result<Expr, String> { // so we will be returning either a Expr or Error msg
+    // Start parsing
+    pub fn parse(&mut self) -> Result<Stmt, String> {
+        // check for publish keyword
+        if let Token::Publish = self.current() {
+            self.advance();
+            self.expect(Token::LParen)?;
+            let expr = self.parse_expr()?;
+            self.expect(Token::RParen)?;
+            return Ok(Stmt::Publish(expr)); // return Stmt not Expr
+        }
+
+        // everything else is a statement wrapping an expression
         let expr = self.parse_assignment()?;
-        Ok(expr)
+        Ok(Stmt::Expression(expr))
     }
 
     // handling assignment i:e x = expr
     fn parse_assignment(&mut self) -> Result<Expr, String> {
-
-        // check if it's a publish command
-        if let Token::Publish = self.current() {
-            self.advance(); // consume the keyword
-
-            // opening parenthesis expected
-            match self.advance() {
-                Token::LParen => {},
-                other => {return Err(format!("Expected '(' after publish, got {:?}", other));}
-            }
-
-            let expr = self.parse_expr()?;
-
-            // closing parenthesis expected
-            match self.advance() {
-                Token::RParen => {},
-                other => return Err(format!("Expected ')' after publish statement, got {:?}", other))
-            }
-
-            return Ok(Expr::Publish(Box::new(expr))); // return when all nessted parsing is done
-        }
-
         // checking it it's in the form "ident ="
         if let Token::Ident(name) = self.current().clone() {
-            if self.pos + 1 < self.tokens.len() { // check if there is next token available
-                if self.tokens[self.pos + 1] == Token::Equal { // check if there is '=' sign
+            if self.pos + 1 < self.tokens.len() {
+                // check if there is next token available
+                if self.tokens[self.pos + 1] == Token::Equal {
+                    // check if there is '=' sign
                     self.advance(); // consumes Ident
                     self.advance(); // consumes '='
                     let val = self.parse_expr()?;
@@ -131,7 +121,7 @@ impl Parser {
                     left = Expr::BinOp(Box::new(left), Op::Sub, Box::new(right));
                 }
                 // no '+' or '-' then break
-                _ => break
+                _ => break,
             }
         }
 
@@ -155,7 +145,7 @@ impl Parser {
                     let right = self.parse_unary()?;
                     left = Expr::BinOp(Box::new(left), Op::Div, Box::new(right));
                 }
-                _ => break
+                _ => break,
             }
         }
 
@@ -172,14 +162,14 @@ impl Parser {
                 Box::new(Expr::Number(0.0)),
                 Op::Sub,
                 Box::new(operand),
-            ))
+            ));
         }
         self.parse_primary()
     }
 
     //handling: Number | Ident | '(' expression ')'
     fn parse_primary(&mut self) -> Result<Expr, String> {
-        match self.advance() { 
+        match self.advance() {
             Token::Number(n) => Ok(Expr::Number(n)), // we are matching Token::Number(n) with self.advance() and if the Token matches we return
             Token::Ident(name) => Ok(Expr::Variable(name)),
 
@@ -191,7 +181,7 @@ impl Parser {
                 }
             }
 
-            other => Err(format!("Unexpected token: {:?}", other))
+            other => Err(format!("Unexpected token: {:?}", other)),
         }
-    } 
+    }
 }
