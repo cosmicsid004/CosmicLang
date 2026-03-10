@@ -43,7 +43,7 @@ raw text ->  [Lexer]  ->  tokens  ->  [Parser]  ->  AST  ->  [Evaluator]  ->  re
 ## Running it
 
 ```bash
-git clone https://github.com/yourusername/cosmiclang
+git clone https://github.com/cosmicsid004/cosmiclang
 cd cosmiclang
 cargo run
 ```
