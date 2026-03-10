@@ -81,6 +81,8 @@ impl Evaluator {
                             Ok(Value::Number(l / r))
                         }
                     }
+                    Op::GreaterThan => Ok(Value::Bool(l > r)),
+                    Op::LessThan => Ok(Value::Bool(l < r)),
                 }
             }
         }

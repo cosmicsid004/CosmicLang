@@ -13,6 +13,8 @@ pub enum Token {
     Star,               // * 
     Slash,              // /
     Equal,              // =
+    RAnchor,            // >
+    LAnchor,            // <
     LParen,             // (
     RParen,             // )
     Ident(String),      // variable(identifier): x, y
@@ -118,6 +120,8 @@ impl Lexer {
                     '=' => { tokens.push(Token::Equal); self.advance() },
                     '(' => { tokens.push(Token::LParen); self.advance() }
                     ')' => { tokens.push(Token::RParen); self.advance() },
+                    '>' => { tokens.push(Token::RAnchor); self.advance(); }
+                    '<' => { tokens.push(Token::LAnchor); self.advance(); }
                     other => {
                         eprintln!("Unknown character: {}", other);
                         self.advance() //skipping unknown character insted of crashing

@@ -30,6 +30,8 @@ pub enum Op {
     Sub,
     Mul,
     Div,
+    GreaterThan,
+    LessThan,
 }
 
 pub struct Parser {
@@ -59,6 +61,7 @@ impl Parser {
     // Grammer
     // programe     = expression | assignment               {a programe can be an (5 + 2) or (x = 8)}
     // assignment   = Ident "=" expression                  {it can be x = (6 + 2) * 8}
+    // comparision  = expression(('<' | '>') expression)*   {it can be x > 10}
     // expression   = term (('+' | '-') term)*              {it can be (10 + 5) the star at end idicate it can be multiple times}
     // term         = unary (('*' | '/') unary)*            {it can be (8 * 9)}
     // unary        = '-' unary | primary                   {it can be -5, -(-8)}
@@ -72,7 +75,7 @@ impl Parser {
         if let Token::Publish = self.current() {
             self.advance();
             self.expect(Token::LParen)?;
-            let expr = self.parse_expr()?;
+            let expr = self.parse_comparision()?;
             self.expect(Token::RParen)?;
             return Ok(Stmt::Publish(expr)); // return Stmt not Expr
         }
@@ -98,7 +101,29 @@ impl Parser {
             }
         }
         // not ans assignment
-        self.parse_expr()
+        self.parse_comparision()
+    }
+
+    // handling comparision operations
+    fn parse_comparision(&mut self) -> Result<Expr, String> {
+        let mut left = self.parse_expr()?;
+
+        loop {
+            match self.current() {
+                Token::RAnchor => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::GreaterThan, Box::new(right));
+                }
+                Token::LAnchor => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::LessThan, Box::new(right));
+                }
+                _ => break
+            }
+        }
+        Ok(left)
     }
 
     // handling: term (('+' | '-') term)*
