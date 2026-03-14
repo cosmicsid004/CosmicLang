@@ -17,6 +17,8 @@ pub enum Token {
     LAnchor,            // <
     LParen,             // (
     RParen,             // )
+    RAnchorEqual,       // >= 
+    LAnchorEqual,       // <=
     EqualEqual,         // ==
     NotEqualTo,         // !=
     Ident(String),      // variable(identifier): x, y
@@ -127,8 +129,27 @@ impl Lexer {
                     // '=' => { tokens.push(Token::Equal); self.advance() },
                     '(' => { tokens.push(Token::LParen); self.advance() }
                     ')' => { tokens.push(Token::RParen); self.advance() },
-                    '>' => { tokens.push(Token::RAnchor); self.advance(); }
-                    '<' => { tokens.push(Token::LAnchor); self.advance(); }
+                    // '>' => { tokens.push(Token::RAnchor); self.advance(); }
+                    // '<' => { tokens.push(Token::LAnchor); self.advance(); }
+                    '>' => {
+                        if self.peek() == Some('=') {
+                            self.advance();
+                            self.advance();
+                            tokens.push(Token::RAnchorEqual);
+                        } else {
+                            tokens.push(Token::RAnchor);
+                        }
+                    }
+                    '<' => {
+                        if self.peek() == Some('=') {
+                            self.advance();
+                            self.advance();
+                            tokens.push(Token::LAnchorEqual);
+                        } else {
+                            tokens.push(Token::LAnchor);
+                            self.advance();
+                        }
+                    }
                     '=' => { 
                         if self.peek() == Some('=') {
                             self.advance();

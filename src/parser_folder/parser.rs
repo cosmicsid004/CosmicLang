@@ -32,6 +32,8 @@ pub enum Op {
     Div,
     GreaterThan,
     LessThan,
+    GreaterThanEqual,
+    LessThanEqual,
     NotEqualTo,
     EqualEqual
 }
@@ -131,6 +133,16 @@ impl Parser {
                     self.advance();
                     let right = self.parse_expr()?;
                     left = Expr::BinOp(Box::new(left), Op::NotEqualTo, Box::new(right))
+                }
+                Token::RAnchorEqual => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::GreaterThanEqual, Box::new(right));
+                }
+                Token::LAnchorEqual => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::LessThanEqual, Box::new(right));
                 }
                 _ => break
             }
