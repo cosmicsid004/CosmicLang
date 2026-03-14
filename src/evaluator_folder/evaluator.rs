@@ -83,6 +83,8 @@ impl Evaluator {
                     }
                     Op::GreaterThan => Ok(Value::Bool(l > r)),
                     Op::LessThan => Ok(Value::Bool(l < r)),
+                    Op::EqualEqual => Ok(Value::Bool(l == r)),
+                    Op::NotEqualTo => Ok(Value::Bool(l != r)),
                 }
             }
         }

@@ -17,6 +17,8 @@ pub enum Token {
     LAnchor,            // <
     LParen,             // (
     RParen,             // )
+    EqualEqual,         // ==
+    NotEqualTo,         // !=
     Ident(String),      // variable(identifier): x, y
     Publish,            // use this to get standard output
     EOF                 // End Of Input: to know when the line ends
@@ -41,6 +43,11 @@ impl Lexer {
     fn current(&self) -> Option<char> { // borowwing the Lexar
         self.input.get(self.pos).copied() 
         // we are copying because we promised to return Option<char> not Option<&char>
+    }
+
+    //so this function will read the nexr char and returns it wiout consuming it. We need this for operations with multiple char like ==, !=
+    fn peek(&self) -> Option<char> {
+        return self.input.get(self.pos + 1).copied()
     }
 
     // moving forward one char at a time
@@ -117,11 +124,32 @@ impl Lexer {
                     '-' => { tokens.push(Token::Minus); self.advance() },
                     '*' => { tokens.push(Token::Star); self.advance() },
                     '/' => { tokens.push(Token::Slash); self.advance() },
-                    '=' => { tokens.push(Token::Equal); self.advance() },
+                    // '=' => { tokens.push(Token::Equal); self.advance() },
                     '(' => { tokens.push(Token::LParen); self.advance() }
                     ')' => { tokens.push(Token::RParen); self.advance() },
                     '>' => { tokens.push(Token::RAnchor); self.advance(); }
                     '<' => { tokens.push(Token::LAnchor); self.advance(); }
+                    '=' => { 
+                        if self.peek() == Some('=') {
+                            self.advance();
+                            self.advance();
+                            tokens.push(Token::EqualEqual);
+                        } else {
+                            tokens.push(Token::Equal);
+                            self.advance();
+                        }
+                     }
+                     '!' => {
+                        if self.peek() == Some('=') {
+                            self.advance();
+                            self.advance();
+                            tokens.push(Token::NotEqualTo);
+                        } else {
+                            eprintln!("Unknown character: !");
+                            self.advance();
+                        }
+                     }
+
                     other => {
                         eprintln!("Unknown character: {}", other);
                         self.advance() //skipping unknown character insted of crashing

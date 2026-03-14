@@ -32,6 +32,8 @@ pub enum Op {
     Div,
     GreaterThan,
     LessThan,
+    NotEqualTo,
+    EqualEqual
 }
 
 pub struct Parser {
@@ -119,6 +121,16 @@ impl Parser {
                     self.advance();
                     let right = self.parse_expr()?;
                     left = Expr::BinOp(Box::new(left), Op::LessThan, Box::new(right));
+                }
+                Token::EqualEqual => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::EqualEqual, Box::new(right));
+                }
+                Token::NotEqualTo => {
+                    self.advance();
+                    let right = self.parse_expr()?;
+                    left = Expr::BinOp(Box::new(left), Op::NotEqualTo, Box::new(right))
                 }
                 _ => break
             }
