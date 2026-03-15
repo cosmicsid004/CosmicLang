@@ -8,21 +8,28 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Number(f64),        // Any number: 3, 5
+
+    LParen,             // (
+    RParen,             // )
+
     Plus,               // +
     Minus,              // -
     Star,               // * 
     Slash,              // /
     Equal,              // =
+    
     RAnchor,            // >
     LAnchor,            // <
-    LParen,             // (
-    RParen,             // )
+
     RAnchorEqual,       // >= 
     LAnchorEqual,       // <=
     EqualEqual,         // ==
     NotEqualTo,         // !=
+
     Ident(String),      // variable(identifier): x, y
+    
     Publish,            // use this to get standard output
+
     EOF                 // End Of Input: to know when the line ends
 }
 
