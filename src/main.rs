@@ -15,9 +15,9 @@ use parser_folder::parser::Parser;
 use std::io::{self, Write}; // to read inputs anf flushing stdout
 
 use std::env; // use this to read command line input
-use std::fs;
+use std::fs; // use this to work with files (reading, writing etc)
 
-use crate::parser_folder::parser::{self, Expr}; // use this to work with files (reading, writing etc)
+use crate::parser_folder::parser::{self, Expr}; 
 
 
 fn main () {
