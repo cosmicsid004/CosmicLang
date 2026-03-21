@@ -26,6 +26,8 @@ pub enum Token {
     EqualEqual,         // ==
     NotEqualTo,         // !=
 
+    StringLiteral(String),      // "hello world"
+
     Ident(String),      // variable(identifier): x, y
     
     Publish,            // use this to get standard output
@@ -177,6 +179,19 @@ impl Lexer {
                             self.advance();
                         }
                      }
+                     '"' => { 
+                        self.advance(); // consumin th starting quote
+                        let mut s = String::new();
+                        while let Some(c) = self.current() {
+                            if c == '"' {
+                                self.advance(); // consume the closing quote
+                                break;
+                            }
+                            s.push(c);
+                            self.advance();
+                        }
+                        tokens.push(Token::StringLiteral(s));
+                      }
 
                     other => {
                         eprintln!("Unknown character: {}", other);

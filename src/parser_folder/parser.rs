@@ -17,6 +17,7 @@ use crate::stmt::Stmt;
 #[derive(Debug, Clone)]
 pub enum Expr {
     Number(f64),
+    StringLiteral(String),
     Variable(String),
     Assign(String, Box<Expr>),
     BinOp(Box<Expr>, Op, Box<Expr>),
@@ -220,6 +221,7 @@ impl Parser {
     fn parse_primary(&mut self) -> Result<Expr, String> {
         match self.advance() {
             Token::Number(n) => Ok(Expr::Number(n)), // we are matching Token::Number(n) with self.advance() and if the Token matches we return
+            Token::StringLiteral(s) => Ok(Expr::StringLiteral(s)),
             Token::Ident(name) => Ok(Expr::Variable(name)),
 
             Token::LParen => {
@@ -229,7 +231,6 @@ impl Parser {
                     other => Err(format!("Expected ')' but got {:?}", other)), //finding something unrelated
                 }
             }
-
             other => Err(format!("Unexpected token: {:?}", other)),
         }
     }

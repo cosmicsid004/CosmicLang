@@ -1,10 +1,10 @@
 // These are the values that our eval function from evaluator can return
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum Value {
     Number(f64),
     Bool(bool),
-    // Str(String),
+    Str(String),
     Nil
 }
 
@@ -14,7 +14,7 @@ impl std::fmt::Display for Value {
         match self {
             Value::Number(n) => write!(f, "{}", n),
             Value::Bool(b) => write!(f, "{}", b),
-            // Value::Str(s) => write!(f, "{}", s),
+            Value::Str(s) => write!(f, "{}", s),
             Value::Nil => write!(f, "nil"),
         }
     }

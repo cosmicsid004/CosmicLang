@@ -41,11 +41,13 @@ impl Evaluator {
         match expr {
             // Only number - just returning it
             Expr::Number(n) => Ok(Value::Number(n)),
+            Expr::StringLiteral(s) => Ok(Value::Str(s)),
 
             // A variable - check if present in the environment
             Expr::Variable(name) => {
                 match self.env.get(&name) {
-                    Some(val) => Ok(*val), // found it return the value, here derefrending is done because we promised to return a f64 not a &f64
+                    // switching *val to val.clone() in variable lookup (since String isn't Copy)
+                    Some(val) => Ok(val.clone()), // found it return the value, here derefrending is done because we promised to return a f64 not a &f64
                     None => Err(format!("Undefined variable {}", name)),
                 }
             }
@@ -54,7 +56,7 @@ impl Evaluator {
             // So, first evaluate the right then store it then return it
             Expr::Assign(name, value_expr) => {
                 let val = self.eval(*value_expr)?; // recurursively solving the nested statements. Derefrencing because eval takes Expr not Box<Expr>
-                self.env.insert(name.clone(), val);
+                self.env.insert(name.clone(), val.clone()); //  switching *val to val.clone() in variable lookup (since String isn't Copy)
                 // println!("{} = {}", name, val); // display what was stored
                 Ok(val)
             }
@@ -63,6 +65,13 @@ impl Evaluator {
             Expr::BinOp(left, op, right) => {
                 let l = self.eval(*left)?; // evaluate the left subtree
                 let r = self.eval(*right)?; // evaluate the right subtree 
+
+                // Handling string concatination
+                if let (Value::Str(a), Value::Str(b)) = (&l, &r) {
+                    if let Op::Add = op {
+                        return Ok(Value::Str(format!("{}{}", a, b)))
+                    }
+                }
 
                 // Extracting numbers first
                 let (l, r) = match (l, r) {

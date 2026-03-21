@@ -123,7 +123,7 @@ fn compile_file(filename: &str) {
         }
     };
 
-    println!("Compoling: {}", filename);
+    println!("Compiling: {}", filename);
     println!("----------------------------------------");
 
     // runnig each line through pipeline
