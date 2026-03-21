@@ -54,9 +54,7 @@ That's it. No dependencies outside of Rust's standard library.
 
 ## What's coming next
 
-- [ ] Comparison operators (`==`, `>`, `<`)
 - [ ] `if / else` blocks
-- [ ] String literals (`"hello"`)
 - [ ] `while` loops
 - [ ] Functions with `fn name(args) { body }`
 - [ ] Better error messages with line numbers

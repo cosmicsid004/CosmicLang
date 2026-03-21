@@ -198,7 +198,7 @@ fn print_help() {
     println!("╚══════════════════════════════════════╝");
     println!();
     println!("Usage:");
-    println!("  cosmic repl                -> Start interactive REPL");
-    println!("  cosmic compile <file.cz>   -> Compile and run a .cosmic file");
+    println!("  cargo run repl                -> Start interactive REPL");
+    println!("  cargo run compile <file.cosmic>   -> Compile and run a .cosmic file");
     println!();
 }
