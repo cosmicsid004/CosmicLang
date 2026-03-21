@@ -17,7 +17,7 @@ use std::io::{self, Write}; // to read inputs anf flushing stdout
 use std::env; // use this to read command line input
 use std::fs; // use this to work with files (reading, writing etc)
 
-use crate::parser_folder::parser::{self, Expr}; 
+// use crate::parser_folder::parser::{self, Expr}; 
 
 
 fn main () {
@@ -185,14 +185,16 @@ fn run_pipeline_result(source: &str, evaluator: &mut Evaluator) -> Result<(), St
 
 fn intro() {
     println!("╔══════════════════════════════════════╗");
-    println!("║       CosmicLang  v1.0.0             ║");
+    println!("║         CosmicLang  v1.0.0           ║");
+    println!("║        concise. expressive.          ║");
     println!("╚══════════════════════════════════════╝");
     println!();
 }
 
 fn print_help() {
     println!("╔══════════════════════════════════════╗");
-    println!("║       CosmicLang  v1.0.0             ║");
+    println!("║         CosmicLang  v1.0.0           ║");
+    println!("║        concise. expressive.          ║");
     println!("╚══════════════════════════════════════╝");
     println!();
     println!("Usage:");
