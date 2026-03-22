@@ -1,6 +1,13 @@
-# CosmicLang
+<p align="center">
+  <img src="owl.png" width="180" alt="CosmicLang Logo"/>
+</p>
 
-An experimental programming language focused on concise, expressive syntax
+<h1 align="center">CosmicLang</h1>
+
+<p align="center">
+  <i>A language programming language focused on being concise & expressive .</i>
+</p>
+
 
 ## Description
 It's got a lexer, parser, and evaluator the whole compiler pipeline and runs as a REPL in your terminal.
