@@ -26,6 +26,11 @@ pub enum Token {
     EqualEqual,         // ==
     NotEqualTo,         // !=
 
+    questionMark,       // ?
+    colon,              // :
+    leftCurly,          // {
+    rightCurly,         // }
+
     StringLiteral(String),      // "hello world"
 
     Ident(String),      // variable(identifier): x, y
@@ -147,6 +152,7 @@ impl Lexer {
                             tokens.push(Token::RAnchorEqual);
                         } else {
                             tokens.push(Token::RAnchor);
+                            self.advance(); // by mistake i missed this line and it always stuck when i used greter than operator
                         }
                     }
                     '<' => {
@@ -191,7 +197,11 @@ impl Lexer {
                             self.advance();
                         }
                         tokens.push(Token::StringLiteral(s));
-                      }
+                    }
+                    '?' => { tokens.push(Token::questionMark); self.advance(); }
+                    ':' => { tokens.push(Token::colon); self.advance(); }
+                    '{' => { tokens.push(Token::leftCurly); self.advance(); }
+                    '}' => { tokens.push(Token::rightCurly); self.advance(); }
 
                     other => {
                         eprintln!("Unknown character: {}", other);
@@ -204,4 +214,3 @@ impl Lexer {
         tokens // return the completed list
     }
 }
-

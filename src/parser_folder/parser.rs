@@ -21,7 +21,8 @@ pub enum Expr {
     Variable(String),
     Assign(String, Box<Expr>),
     BinOp(Box<Expr>, Op, Box<Expr>),
-    // Publish(Box<Expr>)
+    // Publish(Box<Expr>),
+    Ternary(Box<Expr>, Box<Stmt>, Box<Stmt>),
 }
 
 // Math operstors
@@ -36,7 +37,7 @@ pub enum Op {
     GreaterThanEqual,
     LessThanEqual,
     NotEqualTo,
-    EqualEqual
+    EqualEqual,
 }
 
 pub struct Parser {
@@ -66,6 +67,7 @@ impl Parser {
     // Grammer
     // programe     = expression | assignment               {a programe can be an (5 + 2) or (x = 8)}
     // assignment   = Ident "=" expression                  {it can be x = (6 + 2) * 8}
+    // ternary      = consdtion ? exp1: exp2                {if else}
     // comparision  = expression(('<' | '>') expression)*   {it can be x > 10}
     // expression   = term (('+' | '-') term)*              {it can be (10 + 5) the star at end idicate it can be multiple times}
     // term         = unary (('*' | '/') unary)*            {it can be (8 * 9)}
@@ -100,13 +102,48 @@ impl Parser {
                     // check if there is '=' sign
                     self.advance(); // consumes Ident
                     self.advance(); // consumes '='
-                    let val = self.parse_expr()?;
+                    let val = self.parse_ternary()?;
                     return Ok(Expr::Assign(name, Box::new(val)));
                 }
             }
         }
         // not ans assignment
-        self.parse_comparision()
+        self.parse_ternary()
+    }
+
+    // function used to parse the if/else block
+    fn parse_ternary(&mut self) -> Result<Expr, String> {
+        let condition = self.parse_comparision()?;
+
+        if let Token::questionMark = self.current() {
+            self.advance();
+
+            self.expect(Token::leftCurly)?;
+            let true_expr = self.parse_block()?;
+            self.expect(Token::rightCurly)?;
+
+            self.expect(Token::colon)?;
+
+            self.expect(Token::leftCurly)?;
+            let false_expr = self.parse_block()?;
+            self.expect(Token::rightCurly)?;
+
+            return Ok(Expr::Ternary(Box::new(condition), Box::new(true_expr), Box::new(false_expr)));
+        }
+        Ok(condition)
+    }
+
+    // to parse a block of code in curly braces
+    fn parse_block(&mut self) -> Result<Stmt, String> {
+        let mut stmts = Vec::new();
+
+        // we are using & because we cant compare Token with &Token
+        while self.current() != &Token::rightCurly && self.current() != &Token::EOF {
+            let stmt = self.parse()?;
+            stmts.push(stmt);
+        } 
+
+        Ok(Stmt::Block(stmts))
     }
 
     // handling comparision operations
@@ -145,7 +182,7 @@ impl Parser {
                     let right = self.parse_expr()?;
                     left = Expr::BinOp(Box::new(left), Op::LessThanEqual, Box::new(right));
                 }
-                _ => break
+                _ => break,
             }
         }
         Ok(left)

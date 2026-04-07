@@ -12,4 +12,7 @@ pub enum Stmt {
 
     // Not compute anything {(publish(8))}
     Publish(Expr),
+
+    // To calculate a blocck of caode like something in between { }
+    Block(Vec<Stmt>) // so it can be {Stmt1, Stmt2}
 }

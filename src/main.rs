@@ -174,7 +174,7 @@ fn run_pipeline(source: &str, evaluator: &mut Evaluator, print_result: bool) {
 fn run_pipeline_result(source: &str, evaluator: &mut Evaluator) -> Result<(), String> {
     let mut lexer = Lexer::new(source);
     let tokens = lexer.tokenize();
-
+    
     let mut parser = Parser::new(tokens);
     let ast = parser.parse().map_err(|e| e.to_string())?;
 

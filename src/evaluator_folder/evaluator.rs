@@ -30,6 +30,14 @@ impl Evaluator {
                 println!("{}", val); // Value has Display now so this works
                 Ok(Value::Nil)
             }
+
+            Stmt::Block(stmts) => {
+                let mut last = Value::Nil;
+                for stmt in stmts {
+                    last = self.eval_stmt(stmt)?;
+                }
+                Ok(last)
+            }
         }
     }
 
@@ -96,6 +104,15 @@ impl Evaluator {
                     Op::NotEqualTo => Ok(Value::Bool(l != r)),
                     Op::GreaterThanEqual => Ok(Value::Bool(l >= r)),
                     Op::LessThanEqual => Ok(Value::Bool(l <= r))
+                }
+            }
+
+            Expr::Ternary(condition, true_expr , false_expr) => {
+                let cond = self.eval(*condition)?; // evalate the condition subtree
+                match cond {
+                    Value::Bool(true) => self.eval_stmt(*true_expr),
+                    Value::Bool(false) => self.eval_stmt(*false_expr),
+                    _ => Err("Ternary condition must return a boolean".to_string()),
                 }
             }
         }
