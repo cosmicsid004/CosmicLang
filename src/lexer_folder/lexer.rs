@@ -26,10 +26,10 @@ pub enum Token {
     EqualEqual,         // ==
     NotEqualTo,         // !=
 
-    questionMark,       // ?
-    colon,              // :
-    leftCurly,          // {
-    rightCurly,         // }
+    QuestionMark,       // ?
+    Colon,              // :
+    LeftCurly,          // {
+    RightCurly,         // }
 
     StringLiteral(String),      // "hello world"
 
@@ -198,10 +198,10 @@ impl Lexer {
                         }
                         tokens.push(Token::StringLiteral(s));
                     }
-                    '?' => { tokens.push(Token::questionMark); self.advance(); }
-                    ':' => { tokens.push(Token::colon); self.advance(); }
-                    '{' => { tokens.push(Token::leftCurly); self.advance(); }
-                    '}' => { tokens.push(Token::rightCurly); self.advance(); }
+                    '?' => { tokens.push(Token::QuestionMark); self.advance(); }
+                    ':' => { tokens.push(Token::Colon); self.advance(); }
+                    '{' => { tokens.push(Token::LeftCurly); self.advance(); }
+                    '}' => { tokens.push(Token::RightCurly); self.advance(); }
 
                     other => {
                         eprintln!("Unknown character: {}", other);

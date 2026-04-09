@@ -115,18 +115,18 @@ impl Parser {
     fn parse_ternary(&mut self) -> Result<Expr, String> {
         let condition = self.parse_comparision()?;
 
-        if let Token::questionMark = self.current() {
+        if let Token::QuestionMark = self.current() {
             self.advance();
 
-            self.expect(Token::leftCurly)?;
+            self.expect(Token::LeftCurly)?;
             let true_expr = self.parse_block()?;
-            self.expect(Token::rightCurly)?;
+            self.expect(Token::RightCurly)?;
 
-            self.expect(Token::colon)?;
+            self.expect(Token::Colon)?;
 
-            self.expect(Token::leftCurly)?;
+            self.expect(Token::LeftCurly)?;
             let false_expr = self.parse_block()?;
-            self.expect(Token::rightCurly)?;
+            self.expect(Token::RightCurly)?;
 
             return Ok(Expr::Ternary(Box::new(condition), Box::new(true_expr), Box::new(false_expr)));
         }
@@ -138,7 +138,7 @@ impl Parser {
         let mut stmts = Vec::new();
 
         // we are using & because we cant compare Token with &Token
-        while self.current() != &Token::rightCurly && self.current() != &Token::EOF {
+        while self.current() != &Token::RightCurly && self.current() != &Token::EOF {
             let stmt = self.parse()?;
             stmts.push(stmt);
         } 
