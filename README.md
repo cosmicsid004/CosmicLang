@@ -1,22 +1,17 @@
 <p align="center">
   <img src="owl.png" width="180" alt="CosmicLang Logo"/>
 </p>
-
 <h1 align="center">CosmicLang</h1>
-
 <p align="center">
-  <i>A language programming language focused on being concise & expressive .</i>
+<i>An edge-computing focused programming language built for constrained, latency-sensitive environments.</i>
 </p>
 
-
 ## Description
-It's got a lexer, parser, and evaluator the whole compiler pipeline and runs as a REPL in your terminal.
-Still very much a work in progress, but it already works for basic math, variables, and printing output.
+CosmicLang has a full compiler pipeline lexer, parser, and evaluator and runs as both a REPL and a file compiler. It supports multi-line programs, blocks, conditionals, string operations, and math. Still a work in progress, but growing fast.
 
 ## Usage
 
-### What it can do right now
-
+### REPL
 ```javascript
 cosmic >> x = 10
 cosmic >> x + 5
@@ -25,14 +20,43 @@ cosmic >> publish(x * 2)
 cosmic >> (x + 2) * 3
 ```
 
-### Current Version (v1.0)
-- Math expressions with correct operator precedence (2 + 3 * 4 = 14, not 18)
-- Variable assignment and reuse
-- Negative numbers and nested parens
-- 'publish(expr)' to print output
-- 'vars' to see all stored variables
-- 'clear' to clear the screen
-- 'quit' / 'exit' to leave
+### File Mode
+```bash
+cargo run hello.cosmic
+```
+
+### Example `.cosmic` program
+```javascript
+x = 10
+y = 20
+
+result = x > y ? {
+    publish("x is bigger")
+} : {
+    publish("y is bigger")
+}
+
+name = "Cosmic"
+lang = "Lang"
+full = name + lang
+publish(full)
+```
+
+## What it can do right now (v2.0)
+
+- Math expressions with correct operator precedence (`2 + 3 * 4 = 14`, not 18)
+- Variable assignment and reuse across lines
+- Negative numbers and nested parentheses
+- `publish(expr)` to print output
+- String concatenation with `+`
+- Comparison operators `>`, `<`, `>=`, `<=`, `==`, `!=`
+- Ternary conditionals `condition ? { } : { }`
+- **Multi-line block support** blocks spanning multiple lines work correctly
+- **Full file compilation** entire `.cosmic` file parsed as one program
+- `vars` to inspect stored variables (REPL)
+- `clear` to clear the screen (REPL)
+- `quit` / `exit` to leave (REPL)
+
 ## How it's built
 
 The compiler pipeline has 3 stages:
