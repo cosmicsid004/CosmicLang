@@ -8,7 +8,7 @@
 //                        insted it should be 2 + (4 * 3) = 14
 // So, we will make a tree and calculate it bottom up
 use crate::lexer_folder::lexer::Token; // this means we are refreing a file in root file
-use crate::stmt::Stmt;
+use crate::stmt::{self, Stmt};
 
 // So, the tree can have any the following types of node
 // this is recursive enum, that's why this is using a Box<Expr>
@@ -64,6 +64,13 @@ impl Parser {
         tok
     }
 
+    // a function tio eat the NewLine between the statements
+    pub fn skip_newline(&mut self) {
+        while self.current() == &Token::NewLine {
+            self.advance();
+        }
+    }
+
     // Grammer
     // programe     = expression | assignment               {a programe can be an (5 + 2) or (x = 8)}
     // assignment   = Ident "=" expression                  {it can be x = (6 + 2) * 8}
@@ -75,6 +82,30 @@ impl Parser {
     // primary      = Number | Ident | '(' expression ')'   {the most basic thing 6, (8 + 2)}
 
     // Lower in the list = higher precedence.
+
+    // Parse a block of code, i:e multiple statements generated 
+    pub fn parse_programe(&mut self) -> Result<Vec<Stmt>, String> {        
+        let mut stmts = Vec::new();
+
+        loop {
+            self.skip_newline();
+
+            // skip black lines and newlines
+            while self.current() == &Token::NewLine {
+                self.advance();
+            }
+
+            // stop when the block ends
+            if self.current() == &Token::EOF {
+                break;
+            }
+
+            let stmt = self.parse()?;
+            stmts.push(stmt);
+        }
+
+        Ok(stmts)
+    }
 
     // Start parsing
     pub fn parse(&mut self) -> Result<Stmt, String> {
@@ -117,16 +148,22 @@ impl Parser {
 
         if let Token::QuestionMark = self.current() {
             self.advance();
+            self.skip_newline();
 
             self.expect(Token::LeftCurly)?;
+            self.skip_newline();
             let true_expr = self.parse_block()?;
             self.expect(Token::RightCurly)?;
+            self.skip_newline();
 
             self.expect(Token::Colon)?;
+            self.skip_newline();
 
             self.expect(Token::LeftCurly)?;
+            self.skip_newline();
             let false_expr = self.parse_block()?;
             self.expect(Token::RightCurly)?;
+            self.skip_newline();
 
             return Ok(Expr::Ternary(Box::new(condition), Box::new(true_expr), Box::new(false_expr)));
         }
@@ -139,8 +176,10 @@ impl Parser {
 
         // we are using & because we cant compare Token with &Token
         while self.current() != &Token::RightCurly && self.current() != &Token::EOF {
+            self.skip_newline();
             let stmt = self.parse()?;
             stmts.push(stmt);
+            self.skip_newline();
         } 
 
         Ok(Stmt::Block(stmts))

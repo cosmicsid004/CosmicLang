@@ -21,6 +21,7 @@ impl Evaluator {
         }
     }
 
+    // eval_stmt calls eval when it needs a value
     pub fn eval_stmt(&mut self, stmt: Stmt) -> Result<Value, String> {
         match stmt {
             Stmt::Expression(expr) => self.eval(expr),
@@ -41,6 +42,7 @@ impl Evaluator {
         }
     }
 
+    // eval calls eval_stmt when ternary branches are Stmts
     // So, the main method will evaluate the node of Expr AST recursively
     // Returns: Result<f64, String>
     //              Ok(number): sucess

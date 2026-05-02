@@ -1,0 +1,28 @@
+x = 10
+y = 20
+
+result = x > y ? {
+    publish("x is big")
+} : {
+    publish("x is small")
+}
+
+a = 100
+b = 200
+
+result2 = a < b ? {
+    diff = b - a
+    publish(diff)
+} : {
+    publish("a is bigger")
+}
+
+name = "Cosmic"
+lang = "Lang"
+
+result3 = x == 10 ? {
+    full = name + lang
+    publish(full)
+} : {
+    publish("x is not 10")
+}

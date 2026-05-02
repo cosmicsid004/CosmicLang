@@ -126,17 +126,25 @@ fn compile_file(filename: &str) {
     println!("Compiling: {}", filename);
     println!("----------------------------------------");
 
-    // runnig each line through pipeline
-    let mut evaluator = Evaluator::new();
-    for (line_num, line) in source.lines().enumerate() {
-        let line = line.trim();
-        if line.is_empty() || line.starts_with("//") {
-            continue;
+    // so now we are making only one LEXER, PARSER and EVALUATOR for the whole file, earlier we were making it for each line
+    let mut lexer = Lexer::new(&source);
+    let tokens = lexer.tokenize();
+
+    let mut parser = Parser::new(tokens);
+    let stmts = match parser.parse_programe() {
+        Ok(s) => s,
+        Err(e) => {
+            eprint!("Parse error: {}", e);
+            std::process::exit(1); // Stop the program right now and signal that something went wrong.
         }
-        if let Err(e) = run_pipeline_result(line, &mut evaluator) {
-            eprint!("[Line {}] Error: {}", line_num + 1, e);
-            std::process::exit(1); // stop immeditly after encountring an error
-        } 
+    };
+
+    let mut evalutor = Evaluator::new();
+    for stmt in stmts {
+        if let Err(e) = evalutor.eval_stmt(stmt) {
+            eprint!("Error: {}", e);
+            std::process::exit(1);
+        }
     }
 
     println!("-----------------------------------------");

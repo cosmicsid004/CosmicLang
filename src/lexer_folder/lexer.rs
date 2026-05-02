@@ -31,6 +31,8 @@ pub enum Token {
     LeftCurly,          // {
     RightCurly,         // }
 
+    NewLine,            // \n
+
     StringLiteral(String),      // "hello world"
 
     Ident(String),      // variable(identifier): x, y
@@ -202,6 +204,8 @@ impl Lexer {
                     ':' => { tokens.push(Token::Colon); self.advance(); }
                     '{' => { tokens.push(Token::LeftCurly); self.advance(); }
                     '}' => { tokens.push(Token::RightCurly); self.advance(); }
+
+                    '\n' => { tokens.push(Token::NewLine); self.advance(); }
 
                     other => {
                         eprintln!("Unknown character: {}", other);
