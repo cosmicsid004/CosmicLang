@@ -91,7 +91,7 @@ impl Parser {
             self.skip_newline();
 
             // skip black lines and newlines
-            while self.current() == &Token::NewLine {
+            while self.current() == &Token::NewLine || self.current() == &Token::Comment {
                 self.advance();
             }
 

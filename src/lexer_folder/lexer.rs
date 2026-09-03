@@ -33,6 +33,8 @@ pub enum Token {
 
     NewLine,            // \n
 
+    Comment,            // # 
+
     StringLiteral(String),      // "hello world"
 
     Ident(String),      // variable(identifier): x, y
@@ -142,11 +144,8 @@ impl Lexer {
                     '-' => { tokens.push(Token::Minus); self.advance() },
                     '*' => { tokens.push(Token::Star); self.advance() },
                     '/' => { tokens.push(Token::Slash); self.advance() },
-                    // '=' => { tokens.push(Token::Equal); self.advance() },
                     '(' => { tokens.push(Token::LParen); self.advance() }
                     ')' => { tokens.push(Token::RParen); self.advance() },
-                    // '>' => { tokens.push(Token::RAnchor); self.advance(); }
-                    // '<' => { tokens.push(Token::LAnchor); self.advance(); }
                     '>' => {
                         if self.peek() == Some('=') {
                             self.advance();
@@ -204,6 +203,16 @@ impl Lexer {
                     ':' => { tokens.push(Token::Colon); self.advance(); }
                     '{' => { tokens.push(Token::LeftCurly); self.advance(); }
                     '}' => { tokens.push(Token::RightCurly); self.advance(); }
+
+                    '#' => {
+                        // To skip line like code comments
+                        while let Some(c) = self.current() {
+                            if c == '\n' {
+                                break;
+                            }
+                            self.advance();
+                        }
+                    }
 
                     '\n' => { tokens.push(Token::NewLine); self.advance(); }
 

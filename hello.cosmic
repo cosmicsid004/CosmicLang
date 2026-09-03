@@ -1,28 +1,65 @@
-x = 10
-y = 20
+publish("=== CosmicLang v2.0 feature reference ===")
 
-result = x > y ? {
-    publish("x is big")
+publish("--- 1. numbers & precedence: * and / bind tighter than + - ---")
+a = 2 + 3 * 4
+publish(a)
+
+b = (2 + 3) * 4
+publish(b)
+
+publish("--- 2. negative numbers & nested parens ---")
+c = -5
+publish(c)
+
+d = -(3 + 2)
+publish(d)
+
+e = --5
+publish(e)
+
+publish("--- 3. variables: assign, reassign, reuse ---")
+x = 10
+x = x + 5
+publish(x)
+
+publish("--- 4. strings & concatenation with + ---")
+first = "Cosmic"
+second = "Lang"
+full = first + second
+publish(full)
+
+publish("--- 5. comparison operators: > < >= <= == != ---")
+publish(10 > 5)
+publish(10 < 5)
+publish(10 >= 10)
+publish(10 <= 9)
+publish(10 == 10)
+publish(10 != 10)
+
+publish("--- 6. ternary conditionals: cond ? { } : { } ---")
+x2 = 10
+y2 = 20
+
+result = x2 > y2 ? {
+    publish("x2 is bigger")
 } : {
-    publish("x is small")
+    publish("y2 is bigger")
 }
 
-a = 100
-b = 200
-
-result2 = a < b ? {
-    diff = b - a
+p = 100
+q = 200
+result2 = p < q ? {
+    diff = q - p
     publish(diff)
 } : {
-    publish("a is bigger")
+    publish("p is bigger")
 }
 
-name = "Cosmic"
-lang = "Lang"
+publish("--- 7. publish() prints any expression ---")
+publish("this prints to stdout")
+publish(1 + 1)
 
-result3 = x == 10 ? {
-    full = name + lang
-    publish(full)
-} : {
-    publish("x is not 10")
-}
+publish("--- 8. whole file compiles as one multi-line program ---")
+publish("done")
+
+# publish("This should not print as it is a comment")
