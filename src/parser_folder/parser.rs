@@ -19,6 +19,7 @@ pub enum Expr {
     Number(f64),
     StringLiteral(String),
     Variable(String),
+    BoolLiteral(bool),
     Assign(String, Box<Expr>),
     BinOp(Box<Expr>, Op, Box<Expr>),
     // Publish(Box<Expr>),
@@ -299,6 +300,9 @@ impl Parser {
             Token::Number(n) => Ok(Expr::Number(n)), // we are matching Token::Number(n) with self.advance() and if the Token matches we return
             Token::StringLiteral(s) => Ok(Expr::StringLiteral(s)),
             Token::Ident(name) => Ok(Expr::Variable(name)),
+            
+            Token::BoolTrue => Ok(Expr::BoolLiteral(true)),
+            Token::BoolFalse => Ok(Expr::BoolLiteral(false)),
 
             Token::LParen => {
                 let expr = self.parse_expr()?; // parsing whats inside the '()'
@@ -307,6 +311,7 @@ impl Parser {
                     other => Err(format!("Expected ')' but got {:?}", other)), //finding something unrelated
                 }
             }
+
             other => Err(format!("Unexpected token: {:?}", other)),
         }
     }

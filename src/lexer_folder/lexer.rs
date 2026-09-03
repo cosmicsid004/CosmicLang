@@ -35,6 +35,9 @@ pub enum Token {
 
     Comment,            // # 
 
+    BoolTrue,           // true
+    BoolFalse,          // false
+
     StringLiteral(String),      // "hello world"
 
     Ident(String),      // variable(identifier): x, y
@@ -119,6 +122,8 @@ impl Lexer {
 
         match ident.as_str() {
             "publish" => Token::Publish,
+            "true" => { Token::BoolTrue }
+            "false" => { Token::BoolFalse }
             _ => Token::Ident(ident)  
         }
     }

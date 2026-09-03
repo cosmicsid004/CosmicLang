@@ -53,6 +53,9 @@ impl Evaluator {
             Expr::Number(n) => Ok(Value::Number(n)),
             Expr::StringLiteral(s) => Ok(Value::Str(s)),
 
+            // To parse boolean literals 
+            Expr::BoolLiteral(b) => Ok(Value::Bool(b)),
+
             // A variable - check if present in the environment
             Expr::Variable(name) => {
                 match self.env.get(&name) {

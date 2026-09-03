@@ -63,3 +63,11 @@ publish("--- 8. whole file compiles as one multi-line program ---")
 publish("done")
 
 # publish("This should not print as it is a comment")
+
+b = true
+b ? {
+    publish("True Statement")
+} : {
+    publish("False Statement")
+}
+
